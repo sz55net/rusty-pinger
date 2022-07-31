@@ -17,6 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Rust Nightly
-      run: rustup set default nightly
+      run: rustup install nightly
     - name: Build
-      run: cargo build --verbose
+      run: cargo +nightly build --verbose
