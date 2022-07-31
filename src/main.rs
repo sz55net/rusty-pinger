@@ -1,7 +1,3 @@
-#![feature(string_remove_matches)]
-#![feature(async_closure)]
-
-    
 
 use std::time::Duration;
 
@@ -35,7 +31,7 @@ async fn main() -> std::io::Result<()> {
         if info & (pjson::STRING | pjson::VALUE) == pjson::STRING | pjson::VALUE {
             let mut el = String::from_utf8(buffer[start..end].to_vec()).unwrap();
             if el.contains(".") {
-                el.remove_matches("\"");
+                el = el.replace("\"", "");
                 ips.push(el);
             }
         }
