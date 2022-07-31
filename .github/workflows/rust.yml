@@ -20,7 +20,7 @@ jobs:
       run: rustup install nightly
       
     - name: Build
-      run: cargo +nightly build --verbose
+      run: cargo +nightly build --verbose --release
       
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
