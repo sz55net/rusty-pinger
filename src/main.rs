@@ -35,7 +35,7 @@ async fn main() -> std::io::Result<()> {
     });
     buffer = Vec::new(); // Deallocate? https://bit.ly/3Jd2pml
     println!("Total ips: {:?}", ips.len());
-    let chunks: Vec<Vec<String>> = ips.chunks(ips.len() / 8).map(|s| s.into()).collect();
+    let chunks: Vec<Vec<String>> = ips.chunks(ips.len() / 12).map(|s| s.into()).collect();
     let mut handles = Vec::new();
     for chunk in chunks {
         let client_clone =  Arc::clone(&client);
@@ -50,7 +50,7 @@ async fn main() -> std::io::Result<()> {
 async fn process_chunk(chunk: Vec<String>, client: &Client) {
     println!("Spawned thread");
     for ip in chunk.into_iter() {
-        println!("{}", &ip);
+        // println!("{}", &ip);
         let connection = timeout(
             Duration::from_millis(300),
             ConnectionConfig::build(&ip).connect(),
