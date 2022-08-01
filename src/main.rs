@@ -3,7 +3,7 @@ use std::{time::Duration, sync::Arc};
 use async_minecraft_ping::{ConnectionConfig, ServerDescription};
 use futures::future::join_all;
 use tokio::{fs::File, io::AsyncReadExt, time::timeout};
-use tokio_postgres::{NoTls, Client, types::ToSql};
+use tokio_postgres::{NoTls, Client};
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -65,8 +65,11 @@ async fn process_chunk(chunk: Vec<String>, client: &Client) {
             if status.is_ok() && status.as_ref().unwrap().is_ok() {
                 let status = &status.as_ref().unwrap().as_ref().unwrap().status;
                 if let ServerDescription::Object {text: motd } = &status.description {
-                    let player_sample: Vec<&str> = status.players.sample.as_ref().unwrap().into_iter().map(|player| player.id.as_str()).collect();
-                    client.execute("INSERT INTO results (ip,motd, max_players, online_players, version_name, protocol_version, player_sample) VALUES ($1, $2, $3, $4, $5, $6, $7)", &[&ip, motd, &i64::from(status.players.max),  &i64::from(status.players.online), &status.version.name,  &i64::from(status.version.protocol), &player_sample]).await.expect("Error writing to database"); 
+                    if status.players.sample.is_some() {
+                        let player_sample: Vec<&str> = status.players.sample.as_ref().unwrap().into_iter().map(|player| player.id.as_str()).collect();
+                        client.execute("INSERT INTO results (ip,motd, max_players, online_players, version_name, protocol_version, player_sample) VALUES ($1, $2, $3, $4, $5, $6, $7)", &[&ip, motd, &i64::from(status.players.max),  &i64::from(status.players.online), &status.version.name,  &i64::from(status.version.protocol), &player_sample]).await.expect("Error writing to database"); 
+                    }
+                    client.execute("INSERT INTO results (ip,motd, max_players, online_players, version_name, protocol_version) VALUES ($1, $2, $3, $4, $5, $6)", &[&ip, motd, &i64::from(status.players.max),  &i64::from(status.players.online), &status.version.name,  &i64::from(status.version.protocol)]).await.expect("Error writing to database"); 
                 }
             }
         }
