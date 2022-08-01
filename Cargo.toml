@@ -10,7 +10,15 @@ tokio = { version = "1.20.1", features = ["full"] }
 pjson = "0.2.2"
 futures = "0.3.21"
 async-minecraft-ping = "0.8.0"
-tokio-postgres = "0.7.6"
+tokio-postgres = {vesion = "0.7.6", features=["with-uuid-1"]}
+
+[dependencies.uuid]
+version = "1.1.2"
+features = [
+    "v4",                # Lets you generate random UUIDs
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]
 
 [target.x86_64-unknown-linux-gnu]
 linker = "gcc"
