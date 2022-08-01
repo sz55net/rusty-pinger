@@ -26,7 +26,7 @@ jobs:
       
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
-      if: runner.os == "Linux" || runner.os == "macOS"
+      if: runner.os == 'Linux' || runner.os == 'macOS'
       with:
         # Artifact name
         name: ${{ runner.os }} # optional, default is artifact
@@ -35,7 +35,7 @@ jobs:
         
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
-      if: runner.os == "Windows"
+      if: runner.os == 'Windows'
       with:
         # Artifact name
         name: ${{ runner.os }}.exe # optional, default is artifact
