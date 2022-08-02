@@ -95,25 +95,25 @@ async fn process_chunk(chunk: Vec<String>, client: &Client, bucket: &Bucket) {
                     } else {
                         client.execute("INSERT INTO results (ip,motd, max_players, online_players, version_name, protocol_version) VALUES ($1, $2, $3, $4, $5, $6)", &[&ip, motd, &i64::from(status.players.max),  &i64::from(status.players.online), &status.version.name,  &i64::from(status.version.protocol)]).await.expect("Error writing to database");
                     }
-                    if status.favicon.is_some() {
-                        let mut hasher = Sha1::new();
-                        let url = DataUrl::process(status.favicon.as_ref().unwrap()).unwrap();
-                        let (vec_favicon, _) = &url.decode_to_vec().unwrap();
-                        hasher.update(vec_favicon);
-                        let vec_2 = &vec_favicon;
-                        let file_path = hex::encode(hasher.finalize()) + ".png";
-                        bucket
-                            .put_object(&file_path, &vec_2)
-                            .await
-                            .expect("Favicon upload failure");
-                        client
-                            .execute(
-                                "UPDATE results SET favicon=$1 WHERE ip=$2",
-                                &[&file_path, &ip],
-                            )
-                            .await
-                            .unwrap();
-                    }
+                    // if status.favicon.is_some() {
+                    //     let mut hasher = Sha1::new();
+                    //     let url = DataUrl::process(status.favicon.as_ref().unwrap()).unwrap();
+                    //     let (vec_favicon, _) = &url.decode_to_vec().unwrap();
+                    //     hasher.update(vec_favicon);
+                    //     let vec_2 = &vec_favicon;
+                    //     let file_path = hex::encode(hasher.finalize()) + ".png";
+                    //     bucket
+                    //         .put_object(&file_path, &vec_2)
+                    //         .await
+                    //         .expect("Favicon upload failure");
+                    //     client
+                    //         .execute(
+                    //             "UPDATE results SET favicon=$1 WHERE ip=$2",
+                    //             &[&file_path, &ip],
+                    //         )
+                    //         .await
+                    //         .unwrap();
+                    // }
                 }
             }
         }
