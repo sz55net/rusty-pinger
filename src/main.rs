@@ -26,7 +26,7 @@ async fn main() -> std::io::Result<()> {
     let mut ips: Vec<String> = Vec::new();
     let mut buffer = Vec::new();
 
-    let (client, connection) = tokio_postgres::connect("host=localhost user=crunchy password=dd8b58ea9523d875c4472effea7f54e4ee678cdf79211c66ea3e3297c2fbc64f dbname=postgres", NoTls).await.unwrap();
+    let (client, connection) = tokio_postgres::connect("host=localhost user=george password=ab34EF&*cabbage21 dbname=george", NoTls).await.unwrap();
     let client = Arc::new(client);
     tokio::spawn(async move {
         if let Err(e) = connection.await {
