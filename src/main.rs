@@ -11,18 +11,18 @@ use uuid::Uuid;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
-    let s3_region: Region = Region::Custom {
-        region: "storj-gateway".to_owned(),
-        endpoint: "https://gateway.storjshare.io".to_owned(),
-    };
-    let s3_credentials: Credentials = Credentials {
-        access_key: Some("jvlj23nmsoe5wtlgunes7c37fjka".to_string()),
-        secret_key: Some("j3lumlcb5jsu54hwax6idaurud3jztumxhhzleovqvp3lbjuwtt3w".to_string()),
-        security_token: None,
-        session_token: None,
-        expiration: None,
-    };
-    let bucket = Arc::new(Bucket::new("minecraft-icons", s3_region, s3_credentials).unwrap());
+    // let s3_region: Region = Region::Custom {
+    //     region: "storj-gateway".to_owned(),
+    //     endpoint: "https://gateway.storjshare.io".to_owned(),
+    // };
+    // let s3_credentials: Credentials = Credentials {
+    //     access_key: Some("jvlj23nmsoe5wtlgunes7c37fjka".to_string()),
+    //     secret_key: Some("j3lumlcb5jsu54hwax6idaurud3jztumxhhzleovqvp3lbjuwtt3w".to_string()),
+    //     security_token: None,
+    //     session_token: None,
+    //     expiration: None,
+    // };
+    // let bucket = Arc::new(Bucket::new("minecraft-icons", s3_region, s3_credentials).unwrap());
     let mut ips: Vec<String> = Vec::new();
     let mut buffer = Vec::new();
 
@@ -51,25 +51,25 @@ async fn main() -> std::io::Result<()> {
     });
     buffer = Vec::new(); // Deallocate? https://bit.ly/3Jd2pml
     println!("Total ips: {:?}", ips.len());
-    let chunks: Vec<Vec<String>> = ips.chunks(ips.len() / 32).map(|s| s.into()).collect();
+    let chunks: Vec<Vec<String>> = ips.chunks(ips.len() / 128).map(|s| s.into()).collect();
     let mut handles = Vec::new();
     for chunk in chunks {
         let client_clone = Arc::clone(&client);
-        let bucket_clone = Arc::clone(&bucket);
+        // let bucket_clone = Arc::clone(&bucket);
         handles.push(tokio::spawn(async move {
-            process_chunk(chunk, &*client_clone, &*bucket_clone).await;
+            process_chunk(chunk, &*client_clone).await;
         }));
     }
     join_all(handles).await;
     Ok(())
 }
 
-async fn process_chunk(chunk: Vec<String>, client: &Client, bucket: &Bucket) {
+async fn process_chunk(chunk: Vec<String>, client: &Client) {
     println!("Spawned thread");
     for ip in chunk.into_iter() {
         // println!("{}", &ip);
         let connection = timeout(
-            Duration::from_millis(400),
+            Duration::from_millis(1000),
             ConnectionConfig::build(&ip).connect(),
         )
         .await;
