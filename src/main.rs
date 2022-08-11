@@ -55,7 +55,7 @@ async fn main() -> std::io::Result<()> {
     });
     buffer = Vec::new(); // Deallocate? https://bit.ly/3Jd2pml
     println!("Total ips: {:?}", ips.len());
-    let chunks: Vec<Vec<String>> = ips.chunks(ips.len() / 128).map(|s| s.into()).collect();
+    let chunks: Vec<Vec<String>> = ips.chunks(ips.len() / 1024).map(|s| s.into()).collect();
     let mut handles = Vec::new();
     for chunk in chunks {
         let client_clone = Arc::clone(&client);
@@ -79,7 +79,7 @@ async fn process_chunk(chunk: Vec<String>, client: &Client) {
         .await;
         if connection.is_ok() && connection.as_ref().unwrap().is_ok() {
             let status = timeout(
-                Duration::from_millis(300),
+                Duration::from_millis(2000),
                 connection.unwrap().unwrap().status(),
             )
             .await;
