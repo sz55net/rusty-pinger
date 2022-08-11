@@ -11,11 +11,7 @@ pjson = "0.2.2"
 futures = "0.3.21"
 async-minecraft-ping = "0.8.0"
 tokio-postgres = {vesion = "0.7.6", features=["with-uuid-1"]}
-rust-s3 = "0.32.3"
-data-url = "0.1.1"
 sha-1 = "0.10.0"
-hex = "0.4.3"
-cidr-utils = "0.5.7"
 
 [dependencies.uuid]
 version = "1.1.2"
