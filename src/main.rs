@@ -26,7 +26,7 @@ async fn main() -> std::io::Result<()> {
     let mut buffer = Vec::new();
 
     let (client, connection) = tokio_postgres::connect(
-        "host=localhost user=george password=ab34EF&*cabbage21 dbname=george",
+        "host=/var/run/postgresql user=george password=ab34EF&*cabbage21 dbname=george",
         NoTls,
     )
     .await
