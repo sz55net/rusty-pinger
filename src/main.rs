@@ -55,7 +55,7 @@ async fn main() -> std::io::Result<()> {
     });
     buffer = Vec::new(); // Deallocate? https://bit.ly/3Jd2pml
     println!("Total ips: {:?}", ips.len());
-    let chunks: Vec<Vec<String>> = ips.chunks(ips.len() / 4096).map(|s| s.into()).collect();
+    let chunks: Vec<Vec<String>> = ips.chunks(ips.len() / 64).map(|s| s.into()).collect();
     let mut handles = Vec::new();
     for chunk in chunks {
         // let client_clone = Arc::clone(&client);
